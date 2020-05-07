@@ -41,6 +41,7 @@ from indico.modules.oauth import oauth
 from indico.util import date_time as date_time_util
 from indico.util.i18n import _, babel, get_current_locale, gettext_context, ngettext_context
 from indico.util.mimetypes import icon_from_mimetype
+from indico.util.permissions import can, is_accessible
 from indico.util.signals import values_from_signal
 from indico.util.string import RichMarkup, alpha_enum, crc32, html_to_plaintext, sanitize_html, slugify
 from indico.web.flask.errors import errors_bp
@@ -157,6 +158,8 @@ def setup_jinja(app):
     # Useful (Python) builtins
     app.add_template_global(dict)
     # Global functions
+    app.add_template_global(can)
+    app.add_template_global(is_accessible)
     app.add_template_global(url_for)
     app.add_template_global(url_for_plugin)
     app.add_template_global(url_rule_to_js)
