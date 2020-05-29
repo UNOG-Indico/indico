@@ -63,6 +63,7 @@ DEFAULTS = {
     'MAX_UPLOAD_FILE_SIZE': 0,
     'MEMCACHED_SERVERS': [],
     'NO_REPLY_EMAIL': None,
+    'PERMISSION_CACHE_URL': 'redis://localhost/1',
     'PLUGINS': set(),
     'PROFILE': False,
     'PROVIDER_MAP': {},

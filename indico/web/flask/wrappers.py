@@ -26,6 +26,7 @@ from indico.util.json import IndicoJSONEncoder
 from indico.web.flask.session import IndicoSessionInterface
 from indico.web.flask.templating import CustomizationLoader
 from indico.web.flask.util import make_view_func
+from indico.web.rh import RH
 
 
 _notset = object()
@@ -125,6 +126,7 @@ class IndicoBlueprint(Blueprint):
                           by the `confId` or `event_id` URL argument has
                           the specified feature.
     """
+    RH_resolver = {}
 
     def __init__(self, *args, **kwargs):
         self.__prefix = None
@@ -151,6 +153,8 @@ class IndicoBlueprint(Blueprint):
         return IndicoBlueprintSetupState(self, app, options, first_registration)
 
     def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
+        if type(view_func) is type and issubclass(view_func, RH):
+            view_func._endpoint = '.'.join((self.name, endpoint))
         if view_func is not None:
             # We might have a RH class here - convert it to a callable suitable as a view func.
             view_func = make_view_func(view_func)

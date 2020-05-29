@@ -1,0 +1,18 @@
+Event:
+  Category: category_id
+  Location: venue_id
+Category:
+  Category: parent_id
+Registration:
+  RegistrationForm: registration_form_id
+  RepType: reptype_id
+  NGO: ngo_id
+  Country: country_id
+  UNBody: un_body_id
+  RepTypeCustomEntity: custom_entity_id
+Session:
+  Event: event_id
+RegistrationForm:
+  Event: event_id
+RegistrationData:
+  Registration: registration_id

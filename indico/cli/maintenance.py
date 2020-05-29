@@ -106,3 +106,18 @@ def fix_event_role_acls():
                   default=True, abort=True)
     db.session.commit()
     click.secho('Success!', fg='green')
+
+
+@cli.command()
+@click.option('-p', '--file-path', default=None)
+def endpoint_permissions_file(file_path=None):
+    """Update endpoint_permissions.yaml file."""
+    from indico.util.permissions.cli import endpoint_permission_file
+    endpoint_permission_file(file_path=file_path)
+
+
+@cli.command()
+def add_base_roles():
+    """Add default roles"""
+    from indico.util.permissions.cli import init_roles
+    init_roles()

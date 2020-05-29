@@ -16,6 +16,7 @@ from functools import partial, wraps
 
 import jsonschema
 from flask import current_app, g, redirect, request, session
+from indico.util.permissions import permission_manager
 from sqlalchemy.exc import DatabaseError
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import BadRequest, Forbidden, MethodNotAllowed, NotFound
@@ -226,7 +227,12 @@ class RH(object):
         if rv is not None:
             return rv
 
-        self._check_access()
+        if permission_manager.check_access() is None:
+            g.permission_manager = 'old'
+            self._check_access()
+        else:
+            g.permission_manager = permission_manager
+
         signals.rh.check_access.send(type(self), rh=self)
 
         signal_rv = values_from_signal(signals.rh.before_process.send(type(self), rh=self),
