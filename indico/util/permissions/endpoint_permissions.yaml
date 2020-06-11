@@ -472,9 +472,7 @@ event_roles:
   manage: null
   remove_role_member: null
 events:
-  create:
-    requires: category.manage.create
-    context: categories;category_id
+  create: null
   create_event_label: null
   create_reference_type: null
   delete_event_label: null
@@ -620,7 +618,9 @@ plugin_un:
   category-focal-points-download-xls:
     requires: category.manage
     context: categories;category_id
-  checkin_server_qrcode: null
+  checkin_server_qrcode:
+    requires: server.qrcode.read
+    context: global
   domain: null
   edit: null
   edit_domain: null
