@@ -67,8 +67,8 @@ class IndicoFlask(PluginFlaskMixin, Flask):
     @property
     def session_cookie_name(self):
         name = super(IndicoFlask, self).session_cookie_name
-        if not request.is_secure:
-            name += '_http'
+        # if not request.is_secure:
+        #     name += '_http'
         return name
 
     def create_global_jinja_loader(self):

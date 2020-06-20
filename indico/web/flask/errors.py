@@ -10,7 +10,8 @@ from __future__ import unicode_literals
 import os
 import traceback
 
-from flask import current_app, jsonify, request, session
+import requests
+from flask import current_app, jsonify, request, session, redirect
 from itsdangerous import BadData
 from sqlalchemy.exc import DatabaseError
 from werkzeug.exceptions import BadRequestKeyError, Forbidden, HTTPException, UnprocessableEntity
@@ -76,6 +77,16 @@ def handle_http_exception(exc):
         # if the exception has a custom response, we always use that
         # one instead of showing the default error page
         return exc
+    if exc.code == 404 and request.method == 'GET' and '.' in request.path[-5:]:
+        v1_url = 'http://v1-indico.unog.un.org'
+        url = '{}{}'.format(v1_url, request.path)
+        return redirect(url)
+        # static = requests.get(url)
+        # if 200 <= static.status_code < 300:
+        #     response = current_app.response_class(static.content)
+        #     for k, v in static.headers.iteritems():
+        #         response.headers.add(k, v)
+        #     return response
     return render_error(exc, exc.name, get_error_description(exc), exc.code)
 
 

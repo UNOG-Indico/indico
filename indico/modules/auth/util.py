@@ -111,7 +111,7 @@ def redirect_to_login(next_url=None, reason=None):
 def url_for_login(next_url=None):
     if next_url == '/':
         next_url = None
-    return url_for('auth.login', next=next_url, _external=True)
+    return url_for('auth.login', next=next_url, _external=False)
 
 
 def url_for_logout(next_url=None):

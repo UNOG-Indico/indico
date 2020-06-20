@@ -132,7 +132,7 @@ class RHUserDashboard(RHUserBase):
         if categories:
             category_ids = {c['categ'].id for c in categories.itervalues()}
             categories_events = get_events_in_categories(category_ids, self.user)
-        from_dt = now_utc(False) - relativedelta(weeks=1, hour=0, minute=0, second=0)
+        from_dt = now_utc(False) - relativedelta(year=2, hour=0, minute=0, second=0)
         linked_events = [(event, {'management': bool(roles & self.management_roles),
                                   'reviewing': bool(roles & self.reviewer_roles),
                                   'attendance': bool(roles & self.attendance_roles)})

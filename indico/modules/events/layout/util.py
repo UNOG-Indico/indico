@@ -328,7 +328,7 @@ def get_css_url(event, force_theme=None, for_preview=False):
 
     :param event: The `Event` to get the CSS url for
     :param force_theme: The ID of the theme to override the custom CSS resource
-                        only if it exists
+                        only if v2it exists
     :param for_preview: Whether the URL is used in the CSS preview page
     :return: The URL to the CSS resource
     """
