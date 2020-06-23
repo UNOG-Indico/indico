@@ -68,6 +68,7 @@ def handle_badrequestkeyerror(exc):
 
 @errors_bp.app_errorhandler(HTTPException)
 def handle_http_exception(exc):
+    v1_url = 'http://v1-indico.unog.un.org'
     if not (400 <= exc.code <= 599):
         # if it's not an actual error, use it as a response.
         # this is needed e.g. for the 301 redirects that are raised
@@ -78,7 +79,6 @@ def handle_http_exception(exc):
         # one instead of showing the default error page
         return exc
     if exc.code == 404 and request.method == 'GET' and '.' in request.path[-5:]:
-        v1_url = 'http://v1-indico.unog.un.org'
         url = '{}{}'.format(v1_url, request.path)
         return redirect(url)
         # static = requests.get(url)
@@ -87,6 +87,15 @@ def handle_http_exception(exc):
         #     for k, v in static.headers.iteritems():
         #         response.headers.add(k, v)
         #     return response
+    if exc.code == 404 and request.method == 'POST' and request.path == '/category/save':
+        url = '{}{}'.format(v1_url, request.path)
+        static = requests.post(url, data=dict(request.form))
+        if 200 <= static.status_code < 300:
+            response = current_app.response_class(static.content)
+            for k, v in static.headers.iteritems():
+                response.headers.add(k, v)
+            return response
+
     return render_error(exc, exc.name, get_error_description(exc), exc.code)
 
 
