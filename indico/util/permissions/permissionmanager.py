@@ -691,3 +691,44 @@ class PermissionManager(object):
                for _, tab, id in group} for role_id, group in groupby(result, itemgetter(0))}
         ret.update({Role.get(role_id).name: 'global' for role_id, tab, id in global_roles})
         return ret
+
+    def get_roles_at(self, user, context, inherited=True, group_ids=None):
+        """Look for all the roles the specified user has on a specific context.
+
+        With the `inherited` option, the method returns, accordingly with the
+        permission propagation setup, all the roles assigned to a specific context
+
+        :param user: the User you want to get roles of
+        :type user: User
+        :param context: the context you want to check the permission against
+        :type context: db.Model
+        :param inherited: If true it traverse the permission inheritance graph
+        and gather all the roles together.
+        If False the method checks for roles to actual context only
+        :type inherited: bool
+        :param group_ids: the list of LocalGroup IDs (automatically inferred by the user)
+        :type group_ids: [int]
+        :return: the full set of permission, the user passed as granted to the
+        actual context
+        :rtype: {str}
+        """
+        # TODO To be cached by <user id>-<table>-<id>
+        if isinstance(context, tuple):
+            table, pk = context
+        else:
+            table, pk = context.__tablename__, context.id
+        if group_ids is None:
+            group_ids = map(attrgetter('id'), user.local_groups)
+        if not inherited:
+            return set(imap(itemgetter(0), (db.session.query(Role.name).join(user_roles).filter(
+                or_(user_roles.c['user_id'] == user.id,
+                    user_roles.c['group_id'].in_(group_ids)),
+                user_roles.c['main_table'] == table,
+                user_roles.c['main_pk'] == pk)
+            ).all()))
+        else:
+            return reduce(set.union,
+                          imap(partial(self.get_roles_at, user, inherited=False, group_ids=group_ids),
+                               tuple(self._graph.object_path(context)) + (('global', 0),)),
+                          set())
+
