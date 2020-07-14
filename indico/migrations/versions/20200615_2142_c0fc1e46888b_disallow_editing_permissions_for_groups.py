@@ -1,7 +1,7 @@
 """Disallow editing permissions for groups
 
 Revision ID: c0fc1e46888b
-Revises: 532f0ea25bb1
+Revises: ca84881d5b33
 Create Date: 2020-06-15 21:42:37.242639
 """
 
@@ -10,7 +10,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = 'c0fc1e46888b'
-down_revision = '532f0ea25bb1'
+down_revision = 'ca84881d5b33'
 branch_labels = None
 depends_on = None
 
