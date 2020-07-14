@@ -43,8 +43,9 @@ def upgrade():
         sa.Column('side_table', sa.String(), nullable=True),
         sa.Column('main_pk', sa.Integer(), nullable=False),
         sa.Column('side_pk', sa.Integer(), nullable=True),
-        sa.CheckConstraint(u'((user_id is null and role_id is not null) or (user_id is not null and role_id is null))',
-                           name=op.f('ck_user_roles_user_or_role')),
+        sa.CheckConstraint(u'((user_id is null and group_id is not null) or '
+                           u'(user_id is not null and group_id is null))',
+                           name=op.f('ck_user_roles_user_or_group')),
         sa.ForeignKeyConstraint(['group_id'], [u'users.groups.id'], name=op.f('fk_user_roles_group_id_groups')),
         sa.ForeignKeyConstraint(['role_id'], [u'permissions.roles.id'], name=op.f('fk_user_roles_role_id_roles')),
         sa.ForeignKeyConstraint(['user_id'], [u'users.users.id'], name=op.f('fk_user_roles_user_id_users')),

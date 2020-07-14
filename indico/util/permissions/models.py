@@ -79,8 +79,8 @@ user_roles = db.Table(
     db.Column('side_pk', db.Integer, nullable=True, index=True),
     db.UniqueConstraint('group_id', 'user_id', 'role_id', 'main_table', 'main_pk',
                         'side_table', 'side_pk'),
-    db.CheckConstraint('(user_id is null and role_id is not null) or (user_id is not null and role_id is null)',
-                       'user_or_role'),
+    db.CheckConstraint('(user_id is null and group_id is not null) or (user_id is not null and group_id is null)',
+                       'user_or_group'),
     schema='permissions',
 )
 
