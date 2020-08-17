@@ -110,6 +110,15 @@ Improvements
   thanks :user:`brabemi` & :user:`omegak`)
 - Allow choosing a default badge in categories (:pr:`4574`, thanks
   :user:`omegak`)
+- Display event labels on the user's dashboard as well (:pr:`4592`)
+- Event modules can now be imported from another event (:issue:`4518`, thanks :user:`meluru`)
+- Event modules can now be imported from another event (:issue:`4518`, :pr:`4533`,
+  thanks :user:`meluru`)
+- Include the event keywords in the event API data (:issue:`4598`, :pr:`4599`,
+  thanks :user:`chernals`)
+- Allow registrants to check details for non-active registrations and prevent
+  them from registering twice with the same registration form (:issue:`4594`,
+  :pr:`4595`, thanks :user:`omegak`)
 
 Bugfixes
 ^^^^^^^^
