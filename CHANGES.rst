@@ -164,6 +164,8 @@ Internal Changes
   thanks :user:`omegak`)
 - Add ``extra-registration-settings`` template hook (:pr:`4596`, thanks
   :user:`meluru`)
+- Allow extending polymorphic models in plugins (:pr:`4608`, thanks
+  :user:`omegak`)
 
 
 ----
