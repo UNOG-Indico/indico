@@ -2,6 +2,31 @@ Changelog
 =========
 
 
+Version 2.3.1
+-------------
+
+*Unreleased*
+
+Improvements
+^^^^^^^^^^^^
+
+- Generate material packages in a background task to avoid timeouts or using excessive
+  amounts of disk space in case of people submitting several times (:pr:`4630`)
+
+Bugfixes
+^^^^^^^^
+
+- Only show the warning about draft mode in a conference if it actually has any
+  contributions or timetable entries
+
+Internal Changes
+^^^^^^^^^^^^^^^^
+
+- Add ``registration_form_wtform_created`` signal and send form data in
+  ``registration_created`` and ``registration_updated`` signals (:pr:`4642`,
+  thanks :user:`omegak`)
+
+
 Version 2.3
 -----------
 
