@@ -18,6 +18,12 @@ Bugfixes
 
 - Only show the warning about draft mode in a conference if it actually has any
   contributions or timetable entries
+- Do not show incorrect modification deadline in abstract management area if no
+  such deadline has been set (:pr:`4650`)
+- Fix layout problem when minutes contain overly large embedded images (:issue:`4653`,
+  :pr:`4654`)
+- Prevent pending registrations from being marked as checked-in (:pr:`4646`, thanks
+  :user:`omegak`)
 
 Internal Changes
 ^^^^^^^^^^^^^^^^
