@@ -19,6 +19,8 @@ Internal Changes
   a videoconference room (:pr:`4733`)
 - Videoconference plugins may now override the behavior when cloning an event with
   attached videoconference rooms (:pr:`4732`)
+- Add ``registration_form_section_can_access`` signal (:pr:`4734`, thanks
+  :user:`omegak`)
 
 Version 2.3.2
 -------------

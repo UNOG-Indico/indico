@@ -98,3 +98,15 @@ Called when composing lists of badge templates. The `sender` may be either
 The list of badge templates is passed in the `badge_templates` kwarg.
 The signal handler is expected to mutate the list.
 """)
+
+registration_form_section_can_access = _signals.signal('registration-form-section-can-access', """
+Called when generating registration form sections data.  The `sender` is the
+``RegistrationForm`` object.  The section object is passed in the `section`
+kwarg and the registration object is passed in the `registration` kwarg.  The
+`management` kwarg is set to `True` if the registration form is rendered /
+processed from the event management area. If the access check fails, the section
+will be skipped.
+
+If multiple subscribers to the signal return contradictory results, ``False``
+wins and access is denied.
+""")
