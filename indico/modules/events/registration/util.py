@@ -44,6 +44,7 @@ from indico.modules.events.registration.notifications import (notify_registratio
 from indico.modules.users.util import get_user_by_email
 from indico.util.date_time import format_date
 from indico.util.i18n import _
+from indico.util.signals import values_from_signal
 from indico.util.spreadsheets import unique_col
 from indico.util.string import to_unicode, validate_email, validate_email_verbose
 from indico.web.forms.base import IndicoForm
@@ -71,6 +72,8 @@ def get_title_uuid(regform, title):
 
 def get_event_section_data(regform, management=False, registration=None):
     data = []
+    signal = signals.event.registration.registration_form_section_can_access
+
     if not registration:
         return [s.view_data for s in regform.sections if not s.is_deleted and (management or not s.is_manager_only)]
 
@@ -78,7 +81,8 @@ def get_event_section_data(regform, management=False, registration=None):
     for section in regform.sections:
         if section.is_deleted or (not management and section.is_manager_only):
             continue
-
+        if not all(values_from_signal(signal.send(regform, section=section, registration=registration))):
+            continue
         section_data = section.own_data
         section_data['items'] = []
 
@@ -145,6 +149,7 @@ def check_registration_email(regform, email, registration=None, management=False
 
 def make_registration_form(regform, management=False, registration=None):
     """Create a WTForm based on registration form fields."""
+    signal = signals.event.registration.registration_form_section_can_access
 
     class RegistrationFormWTF(IndicoForm):
         if management:
@@ -158,7 +163,8 @@ def make_registration_form(regform, management=False, registration=None):
     for form_item in regform.active_fields:
         if not management and form_item.parent.is_manager_only:
             continue
-
+        if not all(values_from_signal(signal.send(regform, section=form_item.parent, registration=registration))):
+            continue
         field_impl = form_item.field_impl
         setattr(RegistrationFormWTF, form_item.html_field_name, field_impl.create_wtf_field())
     signals.event.registration_form_wtform_created.send(regform, registration=registration, management=management,
@@ -256,9 +262,11 @@ def modify_registration(registration, data, management=False, notify_user=True):
         registration.user = get_user_by_email(data['email'])
 
     billable_items_locked = not management and registration.is_paid
+    signal = signals.event.registration.registration_form_section_can_access
     for form_item in regform.active_fields:
         field_impl = form_item.field_impl
-        if management or not form_item.parent.is_manager_only:
+        is_visible = all(values_from_signal(signal.send(regform, section=form_item.parent, registration=registration)))
+        if management or not form_item.parent.is_manager_only or not is_visible:
             value = data.get(form_item.html_field_name)
         elif form_item.id not in data_by_field:
             # set default value for manager-only field if it didn't have one before
@@ -280,6 +288,7 @@ def modify_registration(registration, data, management=False, notify_user=True):
             if getattr(registration, key) != value:
                 personal_data_changes[key] = value
             setattr(registration, key, value)
+    raise Exception
     registration.sync_state()
     db.session.flush()
     # sanity check
